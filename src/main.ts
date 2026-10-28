@@ -6,6 +6,9 @@ import './styles/main.css'
 import App from './App.vue'
 import { router } from './router'
 import { vReveal } from './composables/reveal'
+import { installLiquidGlass } from './composables/liquidGlass'
+
+installLiquidGlass()
 
 // Mount after the first navigation resolves so the footer never renders above an empty <main> (CLS).
 const app = createApp(App).use(router).directive('reveal', vReveal)

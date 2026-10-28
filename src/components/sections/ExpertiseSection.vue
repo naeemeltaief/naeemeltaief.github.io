@@ -27,18 +27,19 @@ function onKey(e: KeyboardEvent) {
 </script>
 
 <template>
-  <section id="expertise" aria-labelledby="expertise-title" class="relative py-24 md:py-36">
+  <section id="expertise" aria-labelledby="expertise-title" class="relative isolate overflow-clip py-24 md:py-36">
+    <div class="aurora aurora--soft" aria-hidden="true" />
     <div class="shell">
       <SectionHeading id="expertise-title" index="04" eyebrow="Expertise" title="Five capabilities, each with a track record.">
         No percentage bars. Each group below names the tools — and where I’ve actually used them.
       </SectionHeading>
 
-      <div v-reveal class="mt-14 grid overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] md:mt-20 lg:grid-cols-12">
+      <div v-reveal class="glass mt-14 grid overflow-hidden rounded-[var(--radius-lg)] md:mt-20 lg:grid-cols-12">
         <div
           role="tablist"
           aria-label="Capability groups"
           aria-orientation="vertical"
-          class="flex gap-1 overflow-x-auto border-b border-[var(--line)] bg-paper-2/60 p-2 [scrollbar-width:none] lg:col-span-4 lg:flex-col lg:border-b-0 lg:border-r lg:p-3"
+          class="flex gap-1 overflow-x-auto border-b border-[var(--line)] bg-white/25 p-2 [scrollbar-width:none] lg:col-span-4 lg:flex-col lg:border-b-0 lg:border-r lg:p-3"
           @keydown="onKey"
         >
           <button

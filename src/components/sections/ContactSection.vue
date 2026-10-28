@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, reactive, ref } from 'vue'
-import { ArrowUpRight, Check, Copy, Github, Linkedin, Mail, Phone, Send, TriangleAlert } from 'lucide-vue-next'
+import { ArrowUpRight, Check, Copy, Github, Linkedin, Mail, MessageCircle, Phone, Send, TriangleAlert } from 'lucide-vue-next'
 import { profile } from '@/content/profile'
 import { services } from '@/content/services'
 
@@ -53,9 +53,20 @@ async function submit(e: Event) {
     const res = await fetch(endpoint!, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify({ name: form.name, email: form.email, topic: form.topic, message: form.message }),
+      body: JSON.stringify({
+        name: form.name,
+        email: form.email,
+        topic: form.topic,
+        message: form.message,
+        // Relay options (FormSubmit / Formspree): subject line and readable layout of the email
+        _subject: `Portfolio enquiry — ${form.topic || 'New message'} — ${form.name.trim()}`,
+        _template: 'table',
+      }),
     })
     if (!res.ok) throw new Error(String(res.status))
+    // FormSubmit answers 200 with { success: "false" } when it rejects a message
+    const data = await res.json().catch(() => ({}))
+    if (String(data.success) === 'false') throw new Error(data.message)
     status.value = 'sent'
     Object.assign(form, { name: '', email: '', topic: '', message: '' })
     Object.assign(touched, { name: false, email: false, message: false })
@@ -78,11 +89,13 @@ const channels = [
   { icon: Linkedin, label: 'LinkedIn', value: 'in/naeemeltaief', href: profile.links.linkedin },
   { icon: Github, label: 'GitHub', value: '@naeemeltaief', href: profile.links.github },
   { icon: Phone, label: 'Phone', value: profile.phone, href: profile.phoneHref },
+  { icon: MessageCircle, label: 'WhatsApp', value: profile.phone, href: profile.whatsappHref },
 ]
 </script>
 
 <template>
-  <section id="contact" aria-labelledby="contact-title" class="on-ink relative overflow-hidden bg-ink text-paper">
+  <section id="contact" aria-labelledby="contact-title" class="on-ink relative isolate overflow-hidden bg-ink text-paper">
+    <div class="aurora" aria-hidden="true" />
     <div class="blueprint-dark absolute inset-0 [mask-image:linear-gradient(to_bottom,#000,transparent_70%)]" aria-hidden="true" />
     <div class="shell relative grid gap-14 py-24 md:py-36 lg:grid-cols-12 lg:gap-10">
       <div class="lg:col-span-6">
@@ -97,7 +110,7 @@ const channels = [
           approach it.
         </p>
 
-        <div v-reveal="160" class="mt-10 rounded-[var(--radius-md)] border border-[var(--line-dark)] p-5">
+        <div v-reveal="160" class="glass-dark mt-10 rounded-[var(--radius-md)] p-5">
           <p class="eyebrow text-mute-dark">Email</p>
           <div class="mt-2 flex flex-wrap items-center gap-3">
             <a :href="`mailto:${profile.email}`" class="break-all font-display text-[clamp(1.25rem,2.4vw,1.8rem)] font-semibold tracking-tight underline decoration-paper/25 underline-offset-[6px] transition-colors hover:decoration-signal">
@@ -115,13 +128,13 @@ const channels = [
           </div>
         </div>
 
-        <ul v-reveal="200" class="mt-4 grid gap-3 sm:grid-cols-3">
+        <ul v-reveal="200" class="mt-4 grid gap-3 sm:grid-cols-2">
           <li v-for="c in channels" :key="c.label">
             <a
               :href="c.href"
               :target="c.href.startsWith('http') ? '_blank' : undefined"
               :rel="c.href.startsWith('http') ? 'noopener noreferrer' : undefined"
-              class="group flex h-full flex-col rounded-[var(--radius-md)] border border-[var(--line-dark)] p-4 transition-colors hover:border-paper/40"
+              class="glass-dark group flex h-full flex-col rounded-[var(--radius-md)] p-4 transition-colors hover:border-paper/40"
             >
               <span class="flex items-center justify-between text-mute-dark">
                 <component :is="c.icon" class="size-4" aria-hidden="true" />
@@ -139,7 +152,7 @@ const channels = [
         <form
           v-reveal="120"
           novalidate
-          class="rounded-[var(--radius-lg)] bg-paper p-6 text-ink sm:p-9"
+          class="glass rounded-[var(--radius-lg)] bg-paper/90 p-6 text-ink sm:p-9"
           aria-describedby="form-note"
           @submit.prevent="submit"
         >

@@ -24,7 +24,7 @@ const elsewhere = [
           </div>
         </div>
         <p class="mt-6 max-w-sm text-[0.95rem] leading-relaxed text-mute-dark">
-          Mobile products people can trust — engineered to keep working long after launch day.
+          Mobile products people rely on — engineered to keep working long after launch day.
         </p>
       </div>
 

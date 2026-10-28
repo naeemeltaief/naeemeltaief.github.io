@@ -35,7 +35,8 @@ onBeforeUnmount(() => ctx?.revert())
 </script>
 
 <template>
-  <section id="experience" aria-labelledby="experience-title" class="relative bg-paper-2 py-24 md:py-36">
+  <section id="experience" aria-labelledby="experience-title" class="relative isolate overflow-clip bg-paper-2 py-24 md:py-36">
+    <div class="aurora aurora--soft" aria-hidden="true" />
     <div class="shell">
       <SectionHeading id="experience-title" index="03" eyebrow="Experience" title="From shipping features to setting direction.">
         Five years, one direction of travel: from building interfaces, to owning payment-critical code, to deciding how

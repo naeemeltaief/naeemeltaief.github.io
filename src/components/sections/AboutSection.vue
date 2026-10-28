@@ -22,7 +22,8 @@ const principles = [
 </script>
 
 <template>
-  <section id="about" aria-labelledby="about-title" class="relative py-24 md:py-36">
+  <section id="about" aria-labelledby="about-title" class="relative isolate overflow-clip py-24 md:py-36">
+    <div class="aurora aurora--soft" aria-hidden="true" />
     <div class="shell">
       <SectionHeading id="about-title" index="02" eyebrow="About" title="Engineering that thinks like a product." />
 
@@ -33,7 +34,7 @@ const principles = [
               “Lead from the codebase, not from above it.”
             </blockquote>
             <figcaption class="mt-6 font-mono text-[0.7rem] uppercase tracking-[0.12em] text-mute-dark">
-              How I approach the lead role
+              How I approach the technical mobile lead role
             </figcaption>
           </figure>
         </div>

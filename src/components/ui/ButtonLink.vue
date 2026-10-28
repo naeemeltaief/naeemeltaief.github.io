@@ -91,6 +91,9 @@ const classes = computed(() => [
 .btn--primary {
   background: var(--color-ink);
   color: var(--color-paper);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.18),
+    0 12px 28px -14px rgb(12 14 18 / 0.55);
 }
 .btn--primary::before {
   background: var(--color-signal);
@@ -100,7 +103,13 @@ const classes = computed(() => [
 }
 
 .btn--ghost {
-  border: 1px solid var(--line);
+  border: 1px solid rgb(255 255 255 / 0.65);
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.28));
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.95),
+    0 10px 24px -14px rgb(12 14 18 / 0.3);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  backdrop-filter: blur(16px) saturate(180%);
   color: var(--color-ink);
 }
 .btn--ghost::before {
@@ -112,7 +121,11 @@ const classes = computed(() => [
 }
 
 .btn--light {
-  border: 1px solid var(--line-dark);
+  border: 1px solid rgb(255 255 255 / 0.14);
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.1), rgb(255 255 255 / 0.03));
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.2);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  backdrop-filter: blur(16px) saturate(160%);
   color: var(--color-paper);
 }
 .btn--light::before {

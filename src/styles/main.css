@@ -132,10 +132,115 @@
 
   .chip {
     @apply inline-flex items-center gap-1.5 rounded-full border px-3 py-1 font-mono text-[0.72rem] leading-none;
-    border-color: var(--line);
+    border-color: rgb(255 255 255 / 0.6);
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.3));
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.9);
   }
   .on-ink .chip {
-    border-color: var(--line-dark);
+    border-color: rgb(255 255 255 / 0.13);
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.08), rgb(255 255 255 / 0.03));
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.15);
+  }
+
+  /*
+   * Liquid glass (after iOS 26): near-clear body, thick specular rim, a highlight that
+   * follows the pointer (--mx/--my) and — on Chromium (html.liquid) — real refraction of
+   * whatever sits behind it. Layered backgrounds instead of pseudo-elements so it composes
+   * with .crop and .btn. See composables/liquidGlass.ts.
+   */
+  .glass,
+  .glass-dark {
+    --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition:
+      transform 0.6s var(--spring),
+      box-shadow 0.4s,
+      border-color 0.4s;
+  }
+  .glass {
+    background:
+      radial-gradient(60% 80% at var(--mx, 22%) var(--my, -10%), rgb(255 255 255 / 0.45), transparent 60%),
+      linear-gradient(160deg, rgb(255 255 255 / 0.16), rgb(255 255 255 / 0.04) 45%, rgb(255 255 255 / 0.1));
+    border: 1.5px solid rgb(255 255 255 / 0.7);
+    box-shadow:
+      inset 3px 3px 2px -2px rgb(255 255 255 / 1),
+      inset -3px -3px 2px -2px rgb(255 255 255 / 0.75),
+      inset 0 0 0 0.5px rgb(255 255 255 / 0.5),
+      inset 0 0 14px 2px rgb(255 255 255 / 0.28),
+      inset 0 -10px 22px -16px rgb(12 14 18 / 0.12),
+      0 1px 2px rgb(12 14 18 / 0.06),
+      0 22px 48px -20px rgb(12 14 18 / 0.3);
+    -webkit-backdrop-filter: blur(5px) saturate(200%) brightness(1.05);
+    backdrop-filter: blur(5px) saturate(200%) brightness(1.05);
+  }
+  .glass-dark {
+    background:
+      radial-gradient(60% 80% at var(--mx, 22%) var(--my, -10%), rgb(255 255 255 / 0.14), transparent 60%),
+      linear-gradient(160deg, rgb(255 255 255 / 0.06), rgb(255 255 255 / 0.01) 45%, rgb(255 255 255 / 0.04));
+    border: 1.5px solid rgb(255 255 255 / 0.18);
+    box-shadow:
+      inset 3px 3px 2px -2px rgb(255 255 255 / 0.5),
+      inset -3px -3px 2px -2px rgb(255 255 255 / 0.22),
+      inset 0 0 0 0.5px rgb(255 255 255 / 0.12),
+      inset 0 0 18px 2px rgb(255 255 255 / 0.06),
+      0 30px 64px -28px rgb(0 0 0 / 0.7);
+    -webkit-backdrop-filter: blur(6px) saturate(190%) brightness(1.1);
+    backdrop-filter: blur(6px) saturate(190%) brightness(1.1);
+  }
+  /* Chromium: bend the backdrop through the SVG displacement filter — the "liquid" */
+  .liquid .glass {
+    backdrop-filter: url(#liquid-glass) blur(2px) saturate(200%) brightness(1.05);
+  }
+  .liquid .glass-dark {
+    backdrop-filter: url(#liquid-glass) blur(3px) saturate(190%) brightness(1.12);
+  }
+  /* Interactive glass squishes like a droplet */
+  a.glass:hover,
+  a.glass-dark:hover,
+  button.glass:hover {
+    transform: scale(1.02);
+  }
+  a.glass:active,
+  a.glass-dark:active,
+  button.glass:active {
+    transform: scale(0.96);
+    transition-duration: 0.15s;
+  }
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .glass {
+      background-color: rgb(247 246 242 / 0.94);
+    }
+    .glass-dark {
+      background-color: rgb(29 33 41 / 0.94);
+    }
+  }
+
+  /* Soft colour field behind glass surfaces, so there is something to refract */
+  .aurora {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .aurora::before {
+    content: '';
+    position: absolute;
+    inset: -20%;
+    background:
+      radial-gradient(32% 38% at 18% 22%, rgb(255 90 31 / var(--aurora-a, 0.32)), transparent 70%),
+      radial-gradient(30% 36% at 84% 30%, rgb(255 176 120 / var(--aurora-b, 0.16)), transparent 70%),
+      radial-gradient(38% 40% at 58% 88%, rgb(110 140 255 / var(--aurora-c, 0.24)), transparent 70%);
+    animation: aurora-drift 26s ease-in-out infinite alternate;
+  }
+  .aurora--soft {
+    --aurora-a: 0.16;
+    --aurora-b: 0.12;
+    --aurora-c: 0.14;
+  }
+  @keyframes aurora-drift {
+    to {
+      transform: translate3d(4%, -3%, 0) rotate(8deg) scale(1.06);
+    }
   }
 
   /* Crop marks — the "spec sheet" detail on featured surfaces */

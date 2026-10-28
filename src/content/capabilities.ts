@@ -41,10 +41,10 @@ export const capabilities: Capability[] = [
   {
     id: 'leadership',
     label: '04',
-    title: 'Technical leadership',
+    title: 'Technical mobile leadership',
     description:
-      'Setting direction while still writing code — specs, reviews, mentoring and the hiring that shapes a team.',
-    skills: ['Technical direction', 'Technical specs', 'Code review', 'Mentoring', 'Technical interviews', 'Stakeholder communication'],
+      'Leading a mobile team while still writing code — mobile architecture, specs, reviews, mentoring and hiring mobile engineers.',
+    skills: ['Mobile technical direction', 'Technical specs', 'Code review', 'Mentoring', 'Technical interviews', 'Stakeholder communication'],
     evidence: 'Technical Mobile Team Lead at WASL Global.',
   },
   {

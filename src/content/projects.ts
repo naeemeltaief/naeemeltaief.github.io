@@ -1,8 +1,8 @@
 // Case studies. Copy is rewritten for clarity but every fact traces back to the CV.
 // Details still to be supplied live in ./pending.ts (development builds only).
 
-export type VisualKind = 'hce' | 'sca' | 'emergency' | 'formbuilder'
-export type IconName = 'graduation' | 'users' | 'map' | 'ship'
+export type VisualKind = 'sca' | 'emergency' | 'formbuilder' | 'school'
+export type IconName = 'users' | 'map' | 'ship'
 
 export interface Project {
   slug: string
@@ -27,45 +27,6 @@ export interface Project {
 }
 
 export const projects: Project[] = [
-  {
-    slug: 'hce-card-tokenization',
-    title: 'Digital Card Tokenization',
-    kicker: 'HCE contactless payments',
-    summary:
-      'Physical bank cards become secure tokens on the phone — and customers tap to pay at any contactless terminal.',
-    featured: true,
-    visual: 'hce',
-    domain: 'Fintech · Payments',
-    context: 'Masarat Fintech',
-    platforms: ['Android', 'Flutter'],
-    role: 'Mobile application developer — payment flow, native SDK integration and security layers',
-    problem:
-      'A national card portfolio needed to live on customers’ phones. That means turning a plastic card into a device-held token, then making the phone behave like a contactless card at a real POS terminal — without ever exposing card data.',
-    approach: [
-      {
-        title: 'Full token lifecycle',
-        body: 'Covered the whole journey, not just the happy path: card enrolment, token provisioning, cardholder verification, and token suspension or deletion.',
-      },
-      {
-        title: 'Host Card Emulation over NFC',
-        body: 'Contactless payment runs through HCE on Android, integrated via a native Android SDK so the phone can answer the terminal like a card.',
-      },
-      {
-        title: 'Native SDK, shared product',
-        body: 'The native payment SDK is bridged into Flutter through platform channels, so the product UI stays in one shared codebase while payment-critical code stays native.',
-      },
-      {
-        title: 'Security as a layer, not an afterthought',
-        body: 'Device binding, cardholder verification, encrypted local storage of token references and secure API integration sit beneath the UI as their own layer.',
-      },
-    ],
-    stack: ['Flutter', 'Kotlin', 'Native Android SDK', 'NFC / HCE', 'Platform channels', 'Encrypted storage'],
-    delivered: [
-      'Card digitisation for a national card portfolio.',
-      'Tap-to-pay at contactless POS terminals through HCE over NFC.',
-      'End-to-end token lifecycle: enrolment, provisioning, verification, suspension and deletion.',
-    ],
-  },
   {
     slug: 'mastercard-sca-tokenization',
     title: 'Mastercard SCA Tokenization',
@@ -170,8 +131,8 @@ export const projects: Project[] = [
     kicker: 'Schools management app',
     summary:
       'Students, parents and schools in one experience: progress tracking, learning materials, notifications and direct messaging.',
-    featured: false,
-    icon: 'graduation',
+    featured: true,
+    visual: 'school',
     domain: 'Education',
     platforms: ['Mobile'],
     problem:

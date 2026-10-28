@@ -42,6 +42,7 @@ onBeforeUnmount(() => ctx?.revert())
     aria-labelledby="hero-title"
     class="relative overflow-hidden pt-[calc(var(--header-h)+2.5rem)] md:pt-[calc(var(--header-h)+4rem)]"
   >
+    <div class="aurora aurora--soft" aria-hidden="true" />
     <div class="blueprint pointer-events-none absolute inset-0 -z-10 [mask-image:radial-gradient(80%_70%_at_70%_30%,#000,transparent)]" aria-hidden="true" />
 
     <div class="shell grid items-center gap-12 lg:grid-cols-12 lg:gap-8">
@@ -55,7 +56,7 @@ onBeforeUnmount(() => ctx?.revert())
         </p>
 
         <h1 id="hero-title" data-split class="display-xl mt-7">
-          Mobile products people trust with their <span class="text-signal-ink">money.</span>
+          Mobile products people rely on, <span class="text-signal-ink">every day.</span>
         </h1>
 
         <p data-fade class="lede mt-7 max-w-[54ch] text-mute">

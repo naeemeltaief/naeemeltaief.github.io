@@ -53,9 +53,9 @@ export const services: Service[] = [
   {
     id: 'direction',
     icon: 'compass',
-    title: 'Technical direction',
+    title: 'Technical mobile lead',
     problem: 'Your mobile team needs standards, specs and someone to make the hard technical calls.',
-    value: 'Technical strategy, specs from business and security requirements, code review and mentoring.',
+    value: 'Mobile technical strategy and roadmap, specs from business and security requirements, code review and mentoring for your mobile developers.',
     proof: 'Leads mobile technical direction at WASL Global.',
   },
 ]

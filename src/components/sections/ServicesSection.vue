@@ -15,22 +15,24 @@ const icons: Record<ServiceIcon, typeof Rocket> = {
 </script>
 
 <template>
-  <section id="services" aria-labelledby="services-title" class="on-ink relative overflow-hidden bg-ink py-24 text-paper md:py-36">
+  <section id="services" aria-labelledby="services-title" class="on-ink relative isolate overflow-hidden bg-ink py-24 text-paper md:py-36">
+    <div class="aurora" aria-hidden="true" />
+    <div class="blueprint-dark absolute inset-0 -z-[1] [mask-image:radial-gradient(70%_60%_at_50%_40%,#000,transparent)]" aria-hidden="true" />
     <div class="shell">
       <SectionHeading id="services-title" index="05" eyebrow="Services" title="What I can build with you." dark>
         For founders, product teams and companies who need a mobile product done properly — or a mobile team pointed in
         the right direction.
       </SectionHeading>
 
-      <ul class="mt-14 grid gap-px overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line-dark)] bg-[var(--line-dark)] md:mt-20 md:grid-cols-2 lg:grid-cols-3">
+      <ul class="mt-14 grid gap-4 md:mt-20 md:grid-cols-2 lg:grid-cols-3">
         <li
           v-for="(s, i) in services"
           :key="s.id"
           v-reveal="(i % 3) * 80"
-          class="service group relative flex flex-col bg-ink p-7 sm:p-9"
+          class="service glass-dark group relative flex flex-col rounded-[var(--radius-lg)] p-7 sm:p-9"
         >
           <div class="flex items-center justify-between">
-            <span class="grid size-12 place-items-center rounded-2xl bg-ink-3 text-signal transition-colors duration-500 group-hover:bg-signal group-hover:text-ink">
+            <span class="grid size-12 place-items-center rounded-2xl bg-white/[0.07] text-signal shadow-[inset_0_1px_0_rgb(255_255_255/0.12)] transition-colors duration-500 group-hover:bg-signal group-hover:text-ink">
               <component :is="icons[s.icon]" class="size-5" aria-hidden="true" />
             </span>
             <span class="font-mono text-[0.72rem] text-mute-dark">S—0{{ i + 1 }}</span>
@@ -48,7 +50,7 @@ const icons: Record<ServiceIcon, typeof Rocket> = {
         </li>
       </ul>
 
-      <div v-reveal class="mt-12 flex flex-col items-start justify-between gap-6 rounded-[var(--radius-lg)] border border-[var(--line-dark)] p-7 sm:flex-row sm:items-center sm:p-9">
+      <div v-reveal class="glass-dark mt-12 flex flex-col items-start justify-between gap-6 rounded-[var(--radius-lg)] p-7 sm:flex-row sm:items-center sm:p-9">
         <p class="max-w-[46ch] font-display text-[1.4rem] font-semibold leading-snug tracking-tight">
           Not sure which of these you need? Describe the problem — I’ll tell you honestly what I’d do.
         </p>
@@ -61,23 +63,28 @@ const icons: Record<ServiceIcon, typeof Rocket> = {
 </template>
 
 <style scoped>
+/* Signal light along the top rim on hover, inset to clear the rounded corners */
 .service::before {
   content: '';
   position: absolute;
-  inset: 0 0 auto;
+  top: -1.5px;
+  left: var(--radius-lg);
+  right: var(--radius-lg);
   height: 2px;
-  background: var(--color-signal);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.7s var(--ease-out-expo);
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, var(--color-signal) 20%, var(--color-signal) 80%, transparent);
+  box-shadow: 0 0 14px 1px rgb(255 90 31 / 0.6);
+  opacity: 0;
+  transform: scaleX(0.3);
+  transition:
+    transform 0.7s var(--ease-out-expo),
+    opacity 0.4s;
 }
 .service:hover::before {
+  opacity: 1;
   transform: scaleX(1);
 }
-.service {
-  transition: background-color 0.5s;
-}
 .service:hover {
-  background: var(--color-ink-2);
+  border-color: rgb(255 255 255 / 0.3);
 }
 </style>

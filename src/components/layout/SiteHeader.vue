@@ -70,65 +70,63 @@ onBeforeUnmount(() => {
 
 <template>
   <header
-    class="fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-500"
-    :class="
-      open
-        ? 'border-b border-[var(--line)] bg-paper'
-        : !scrolled
-          ? 'border-b border-transparent'
-          : overDark
-            ? 'is-dark border-b border-[var(--line-dark)] bg-ink/85 text-paper backdrop-blur-xl'
-            : 'border-b border-[var(--line)] bg-paper/85 backdrop-blur-xl backdrop-saturate-150'
-    "
+    class="fixed inset-x-0 top-0 z-50 transition-colors duration-500"
+    :class="[open ? 'bg-paper' : '', overDark && scrolled && !open ? 'is-dark' : '']"
   >
-    <div class="shell flex h-[var(--header-h)] items-center justify-between gap-6">
-      <RouterLink
-        to="/"
-        class="group flex items-center gap-3"
+    <div class="shell flex h-[var(--header-h)] items-center">
+      <!-- Floating liquid-glass capsule once the page scrolls -->
+      <div
+        class="bar flex w-full items-center justify-between gap-6 rounded-full"
+        :class="scrolled && !open ? ['is-floating', overDark ? 'glass-dark text-paper' : 'glass'] : ''"
       >
-        <span class="sr-only sm:hidden">{{ profile.name }} — home</span>
-        <span class="block size-9 transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:-rotate-6">
-          <BrandMark :inverted="overDark && scrolled && !open" />
-        </span>
-        <span class="hidden leading-tight sm:block">
-          <span class="block font-display text-[1.05rem] font-semibold tracking-tight">{{ profile.name }}</span>
-          <span class="block font-mono text-[0.68rem] uppercase tracking-[0.12em] text-mute">Mobile · Fintech</span>
-        </span>
-      </RouterLink>
-
-      <nav aria-label="Primary" class="hidden lg:block">
-        <ul class="flex items-center gap-1">
-          <li v-for="item in navItems" :key="item.hash">
-            <RouterLink
-              :to="{ path: '/', hash: item.hash }"
-              class="nav-link relative rounded-full px-4 py-2 text-[0.92rem] font-medium text-ink/80 transition-colors hover:text-ink"
-            >
-              {{ item.label }}
-            </RouterLink>
-          </li>
-        </ul>
-      </nav>
-
-      <div class="flex items-center gap-2">
         <RouterLink
-          :to="{ path: '/', hash: '#contact' }"
-          class="header-cta hidden h-11 items-center gap-2 rounded-full bg-ink px-5 text-[0.9rem] font-semibold text-paper transition-colors duration-300 hover:bg-signal hover:text-ink sm:inline-flex"
+          to="/"
+          class="group flex items-center gap-3"
         >
-          Start a project
-          <ArrowUpRight class="size-4" aria-hidden="true" />
+          <span class="sr-only sm:hidden">{{ profile.name }} — home</span>
+          <span class="block size-9 transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:-rotate-6">
+            <BrandMark :inverted="overDark && scrolled && !open" />
+          </span>
+          <span class="hidden leading-tight sm:block">
+            <span class="block font-display text-[1.05rem] font-semibold tracking-tight">{{ profile.name }}</span>
+            <span class="block font-mono text-[0.68rem] uppercase tracking-[0.12em] text-mute">Mobile Application Developer</span>
+          </span>
         </RouterLink>
-        <button
-          ref="menuButton"
-          type="button"
-          class="menu-btn inline-flex size-11 items-center justify-center rounded-full border border-[var(--line)] lg:hidden"
-          :aria-expanded="open"
-          aria-controls="mobile-menu"
-          :aria-label="open ? 'Close menu' : 'Open menu'"
-          @click="open = !open"
-        >
-          <X v-if="open" class="size-5" aria-hidden="true" />
-          <Menu v-else class="size-5" aria-hidden="true" />
-        </button>
+
+        <nav aria-label="Primary" class="hidden lg:block">
+          <ul class="flex items-center gap-1">
+            <li v-for="item in navItems" :key="item.hash">
+              <RouterLink
+                :to="{ path: '/', hash: item.hash }"
+                class="nav-link relative rounded-full px-4 py-2 text-[0.92rem] font-medium text-ink/80 transition-colors hover:text-ink"
+              >
+                {{ item.label }}
+              </RouterLink>
+            </li>
+          </ul>
+        </nav>
+
+        <div class="flex items-center gap-2">
+          <RouterLink
+            :to="{ path: '/', hash: '#contact' }"
+            class="header-cta hidden h-11 items-center gap-2 rounded-full bg-ink px-5 text-[0.9rem] font-semibold text-paper transition-colors duration-300 hover:bg-signal hover:text-ink sm:inline-flex"
+          >
+            Start a project
+            <ArrowUpRight class="size-4" aria-hidden="true" />
+          </RouterLink>
+          <button
+            ref="menuButton"
+            type="button"
+            class="menu-btn inline-flex size-11 items-center justify-center rounded-full border border-[var(--line)] lg:hidden"
+            :aria-expanded="open"
+            aria-controls="mobile-menu"
+            :aria-label="open ? 'Close menu' : 'Open menu'"
+            @click="open = !open"
+          >
+            <X v-if="open" class="size-5" aria-hidden="true" />
+            <Menu v-else class="size-5" aria-hidden="true" />
+          </button>
+        </div>
       </div>
     </div>
 
@@ -180,6 +178,23 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+.bar {
+  height: 100%;
+  transition:
+    height 0.5s var(--ease-out-expo),
+    padding 0.5s var(--ease-out-expo),
+    background-color 0.5s,
+    box-shadow 0.5s;
+}
+.bar.is-floating {
+  height: 3.6rem;
+  padding-inline: 0.45rem 0.45rem;
+}
+@media (min-width: 640px) {
+  .bar.is-floating {
+    padding-inline: 0.6rem 0.45rem;
+  }
+}
 .nav-link::after {
   content: '';
   position: absolute;
@@ -230,6 +245,9 @@ onBeforeUnmount(() => {
 }
 .is-dark .menu-btn {
   border-color: var(--line-dark);
+}
+.is-floating .header-cta {
+  height: 2.75rem;
 }
 .is-dark .text-mute {
   color: var(--color-mute-dark);

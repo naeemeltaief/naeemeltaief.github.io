@@ -1,14 +1,16 @@
 <script setup lang="ts">
-import { ArrowUpRight, GraduationCap, Map, Ship, Users } from 'lucide-vue-next'
+import { ArrowUpRight, Map, Ship, Users } from 'lucide-vue-next'
 import SectionHeading from '@/components/ui/SectionHeading.vue'
 import ProjectVisual from '@/components/visuals/ProjectVisual.vue'
 import { featuredProjects, indexProjects, type IconName } from '@/content/projects'
 
-const icons: Record<IconName, typeof Map> = { graduation: GraduationCap, users: Users, map: Map, ship: Ship }
+const icons: Record<IconName, typeof Map> = { users: Users, map: Map, ship: Ship }
 </script>
 
 <template>
-  <section id="work" aria-labelledby="work-title" class="on-ink relative bg-ink py-24 text-paper md:py-36">
+  <section id="work" aria-labelledby="work-title" class="on-ink relative isolate overflow-hidden bg-ink py-24 text-paper md:py-36">
+    <div class="aurora" aria-hidden="true" />
+    <div class="blueprint-dark absolute inset-0 -z-[1] [mask-image:radial-gradient(70%_60%_at_50%_40%,#000,transparent)]" aria-hidden="true" />
     <div class="shell">
       <SectionHeading id="work-title" index="01" eyebrow="Selected work" title="Payments, public services and the tools in between." dark>
         A few projects where the engineering mattered as much as the interface. Each one opens into a short case study.
@@ -19,7 +21,7 @@ const icons: Record<IconName, typeof Map> = { graduation: GraduationCap, users: 
           v-for="(p, i) in featuredProjects"
           :key="p.slug"
           v-reveal
-          class="group relative grid overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line-dark)] bg-ink-2 transition-colors duration-500 hover:border-paper/25 lg:grid-cols-12"
+          class="group relative grid overflow-hidden rounded-[var(--radius-lg)] glass-dark transition-colors duration-500 hover:border-paper/25 lg:grid-cols-12"
         >
           <div class="lg:col-span-7" :class="i % 2 ? 'lg:order-2' : ''">
             <ProjectVisual :kind="p.visual!" class="h-full min-h-full" />

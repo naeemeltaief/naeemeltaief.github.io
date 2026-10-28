@@ -1,48 +1,38 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
-import { Check, Fingerprint, Lock, Nfc } from 'lucide-vue-next'
+import { BookOpen, Check, Fingerprint, Flame, GraduationCap, HeartPulse, Lock, Nfc, Phone, Ship, ShieldAlert } from 'lucide-vue-next'
 import PhoneFrame from './PhoneFrame.vue'
 import { useReducedMotion } from '@/composables/motion'
 
 /**
  * Illustrative product composition (not a product screenshot):
- * a card is tokenised, tapped over NFC and approved, while the side panel shows
- * the request travelling through the clean-architecture layers and back.
+ * a card is tokenised, tapped over NFC and approved.
+ * Flanking phones and a shipment notification hint at the other domains:
+ * public safety (1415), education (Refd) and logistics (Roya Shipping).
  */
 const PAN = '•••• •••• •••• 4821'
 const TOKEN = '4F2A 9C17 0B3E 7D21'
 const GLYPHS = '0123456789ABCDEF'
 
-// One loop = 10 ticks. Each tick maps to a phase and an active architecture layer.
-const timeline = [
-  { phase: 'card', layer: 0 },
-  { phase: 'card', layer: 1 },
-  { phase: 'card', layer: 2 },
-  { phase: 'token', layer: 3 },
-  { phase: 'tap', layer: 3 },
-  { phase: 'tap', layer: 3 },
-  { phase: 'approved', layer: 2 },
-  { phase: 'approved', layer: 1 },
-  { phase: 'approved', layer: 0 },
-  { phase: 'approved', layer: -1 },
-] as const
-
-const layers = [
-  { name: 'Presentation', detail: 'Flutter · BLoC' },
-  { name: 'Domain', detail: 'Use cases' },
-  { name: 'Bridge', detail: 'Platform channel' },
-  { name: 'Native', detail: 'Payment SDK · HCE' },
-]
+// One loop = 10 ticks, each mapped to a phase of the payment flow.
+const timeline = ['card', 'card', 'card', 'token', 'tap', 'tap', 'approved', 'approved', 'approved', 'approved'] as const
 
 const checks = ['Device binding', 'Cardholder verified', 'Token reference encrypted']
+
+const subjects = [
+  { name: 'Mathematics', score: 86 },
+  { name: 'Science', score: 78 },
+  { name: 'Arabic', score: 91 },
+]
+const shipment = ['Loaded · Port of Genoa', 'In transit · Mediterranean', 'Arrived · Misrata port']
 
 const reduced = useReducedMotion()
 const tick = ref(8)
 const number = ref(TOKEN)
 const root = ref<HTMLElement>()
-const step = computed(() => timeline[tick.value])
-const tokenised = computed(() => step.value.phase !== 'card')
-const goingDown = computed(() => tick.value <= 3)
+const phase = computed(() => timeline[tick.value])
+const tokenised = computed(() => phase.value !== 'card')
+const shipStage = computed(() => Math.min(2, Math.floor(tick.value / 4)))
 
 let timer: number | undefined
 let raf = 0
@@ -108,100 +98,221 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <figure ref="root" class="hero-device relative mx-auto w-full max-w-[34rem]">
-    <!-- Concentric NFC field behind the phone -->
-    <div class="field" :class="{ 'is-active': step.phase === 'tap' }" aria-hidden="true">
+  <figure ref="root" class="hero-device relative mx-auto w-full max-w-[36rem]">
+    <!-- Concentric NFC field behind the phones -->
+    <div class="field" :class="{ 'is-active': phase === 'tap' }" aria-hidden="true">
       <span v-for="n in 4" :key="n" :style="{ '--n': n }" />
     </div>
 
-    <div class="relative mx-auto w-[min(78%,19rem)] sm:mr-4 sm:ml-auto" aria-hidden="true">
-      <PhoneFrame>
-        <div class="flex h-full flex-col px-[7%] pb-[8%] pt-[18%] font-sans">
-          <div class="flex items-center justify-between text-[0.6rem] font-medium text-paper/60">
-            <span>Wallet</span>
-            <span class="inline-flex items-center gap-1"><Lock class="size-2.5" /> Device bound</span>
-          </div>
-
-          <!-- Card -->
-          <div class="card mt-4" :class="{ 'is-token': tokenised }">
-            <div class="flex items-start justify-between">
-              <span class="chip-ic" />
-              <Nfc class="size-4 text-paper/70" />
+    <div class="stage relative" aria-hidden="true">
+      <!-- 1415 emergency (left, behind) -->
+      <div class="side side--left">
+        <PhoneFrame tone="paper">
+          <div class="flex h-full flex-col px-[8%] pb-[10%] pt-[24%]">
+            <p class="font-display text-[11cqw] font-bold leading-none tracking-tight">1415</p>
+            <p class="mt-1 text-[4.4cqw] text-mute">Emergency contact</p>
+            <div class="mt-[8%] grid gap-[4cqw]">
+              <div v-for="s in [{ i: HeartPulse, t: 'Medical' }, { i: Flame, t: 'Fire' }, { i: ShieldAlert, t: 'Security' }]" :key="s.t" class="flex items-center gap-[3cqw] rounded-[3cqw] bg-ink px-[5cqw] py-[5cqw] text-paper">
+                <component :is="s.i" class="size-[6cqw] text-signal" /><span class="text-[5cqw] font-semibold">{{ s.t }}</span>
+              </div>
             </div>
-            <div class="mt-auto">
-              <p class="text-[0.5rem] uppercase tracking-[0.18em] text-paper/55">
-                {{ tokenised ? 'Device token' : 'Card number' }}
-              </p>
-              <p class="mt-1 font-mono text-[0.78rem] tracking-[0.06em] tabular-nums">{{ number }}</p>
+            <div class="call mt-auto flex items-center justify-center gap-[2cqw] rounded-full bg-signal py-[5cqw] text-[5cqw] font-bold text-ink">
+              <Phone class="size-[5cqw]" /> Call for help
             </div>
           </div>
-
-          <!-- Security checks, ticking off as the flow progresses -->
-          <ul class="mt-4 grid gap-1.5 text-[0.62rem]">
-            <li v-for="(c, i) in checks" :key="c" class="flex items-center justify-between rounded-lg bg-white/[0.04] px-2.5 py-2">
-              <span class="text-paper/70">{{ c }}</span>
-              <span class="check" :class="{ 'is-done': tick >= i + 1 }">
-                <Check class="size-2.5" />
-              </span>
-            </li>
-          </ul>
-
-          <!-- Status area -->
-          <div class="relative mt-auto flex flex-col items-center text-center">
-            <div class="status-orb" :class="`is-${step.phase}`">
-              <Check v-if="step.phase === 'approved'" class="size-6" />
-              <Nfc v-else-if="step.phase === 'tap'" class="size-6" />
-              <Fingerprint v-else class="size-6" />
-            </div>
-            <p class="mt-3 text-[0.82rem] font-semibold">
-              {{
-                step.phase === 'card'
-                  ? 'Verifying cardholder'
-                  : step.phase === 'token'
-                    ? 'Token provisioned'
-                    : step.phase === 'tap'
-                      ? 'Hold near reader'
-                      : 'Payment approved'
-              }}
-            </p>
-            <p class="mt-1 text-[0.62rem] text-paper/50">Card data never leaves the token</p>
-          </div>
-        </div>
-      </PhoneFrame>
-    </div>
-
-    <!-- Architecture panel -->
-    <div
-      class="arch relative mt-4 w-full rounded-[1.1rem] sm:absolute sm:bottom-[6%] sm:left-0 sm:mt-0 sm:w-[min(58%,15.5rem)] border border-[var(--line)] bg-paper/90 p-3 shadow-[0_24px_48px_-28px_rgb(12_14_18/0.45)] backdrop-blur"
-      aria-hidden="true"
-    >
-      <div class="mb-2 flex items-center justify-between px-1">
-        <span class="font-mono text-[0.6rem] uppercase tracking-[0.14em] text-mute">Request path</span>
-        <span class="font-mono text-[0.6rem] font-semibold text-ink">{{ goingDown ? '↓ out' : '↑ back' }}</span>
+        </PhoneFrame>
       </div>
-      <ol class="grid grid-cols-2 gap-1 sm:grid-cols-1">
-        <li
-          v-for="(l, i) in layers"
-          :key="l.name"
-          class="layer flex items-center justify-between rounded-lg px-2.5 py-2"
-          :class="{ 'is-active': step.layer === i }"
-        >
-          <span class="text-[0.72rem] font-semibold">{{ l.name }}</span>
-          <span class="font-mono text-[0.58rem] opacity-70">{{ l.detail }}</span>
-        </li>
-      </ol>
+
+      <!-- Refd school progress (right, behind) -->
+      <div class="side side--right">
+        <PhoneFrame tone="paper">
+          <div class="flex h-full flex-col px-[8%] pt-[24%]">
+            <div class="flex items-center gap-[2cqw] text-[4.4cqw] text-mute"><GraduationCap class="size-[5cqw]" /> Term progress</div>
+            <p class="mt-[2cqw] font-display text-[8.6cqw] font-bold leading-none tracking-tight">Grade 7 · B</p>
+            <div class="mt-[8%] grid gap-[5cqw]">
+              <div v-for="sub in subjects" :key="sub.name">
+                <div class="flex justify-between text-[4.4cqw] font-medium">
+                  <span>{{ sub.name }}</span><span class="font-mono text-mute">{{ sub.score }}%</span>
+                </div>
+                <div class="mt-[1.5cqw] h-[2cqw] rounded-full bg-ink/10">
+                  <div class="bar h-full rounded-full bg-ink" :style="{ width: `${sub.score}%` }" />
+                </div>
+              </div>
+            </div>
+            <div class="mt-[10%] flex items-center gap-[3cqw] rounded-[3cqw] bg-ink px-[5cqw] py-[4.5cqw] text-paper">
+              <BookOpen class="size-[5.5cqw] text-signal" /><span class="text-[4.4cqw] font-semibold">3 new materials</span>
+            </div>
+          </div>
+        </PhoneFrame>
+      </div>
+
+      <!-- Wallet: tokenise · tap · approve (front) -->
+      <div class="front">
+        <PhoneFrame>
+          <div class="flex h-full flex-col px-[7%] pb-[8%] pt-[18%] font-sans">
+            <div class="flex items-center justify-between text-[3.6cqw] font-medium text-paper/60">
+              <span>Wallet</span>
+              <span class="inline-flex items-center gap-1"><Lock class="size-[3.4cqw]" /> Device bound</span>
+            </div>
+
+            <!-- Card -->
+            <div class="card mt-[6%]" :class="{ 'is-token': tokenised }">
+              <div class="flex items-start justify-between">
+                <span class="chip-ic" />
+                <Nfc class="size-[6cqw] text-paper/70" />
+              </div>
+              <div class="mt-auto">
+                <p class="text-[3cqw] uppercase tracking-[0.18em] text-paper/55">
+                  {{ tokenised ? 'Device token' : 'Card number' }}
+                </p>
+                <p class="mt-1 font-mono text-[4.7cqw] tracking-[0.06em] tabular-nums">{{ number }}</p>
+              </div>
+            </div>
+
+            <!-- Security checks, ticking off as the flow progresses -->
+            <ul class="mt-[6%] grid gap-[2cqw] text-[3.7cqw]">
+              <li v-for="(c, i) in checks" :key="c" class="flex items-center justify-between rounded-[2.5cqw] bg-white/[0.04] px-[4cqw] py-[3cqw]">
+                <span class="text-paper/70">{{ c }}</span>
+                <span class="check" :class="{ 'is-done': tick >= i + 1 }">
+                  <Check class="size-[3.4cqw]" />
+                </span>
+              </li>
+            </ul>
+
+            <!-- Status area -->
+            <div class="relative mt-auto flex flex-col items-center text-center">
+              <div class="status-orb" :class="`is-${phase}`">
+                <Check v-if="phase === 'approved'" class="size-[9cqw]" />
+                <Nfc v-else-if="phase === 'tap'" class="size-[9cqw]" />
+                <Fingerprint v-else class="size-[9cqw]" />
+              </div>
+              <p class="mt-[4cqw] text-[5cqw] font-semibold">
+                {{
+                  phase === 'card'
+                    ? 'Verifying cardholder'
+                    : phase === 'token'
+                      ? 'Token provisioned'
+                      : phase === 'tap'
+                        ? 'Hold near reader'
+                        : 'Payment approved'
+                }}
+              </p>
+              <p class="mt-1 text-[3.7cqw] text-paper/50">Card data never leaves the token</p>
+            </div>
+          </div>
+        </PhoneFrame>
+      </div>
+
+      <!-- Roya shipment notification, liquid glass -->
+      <div class="notice glass bg-white/70">
+        <span class="grid size-8 shrink-0 place-items-center rounded-[0.6rem] bg-ink text-paper"><Ship class="size-4" /></span>
+        <div class="min-w-0">
+          <p class="flex items-center justify-between gap-2 text-[0.62rem] text-mute">
+            <span>Roya Shipping</span><span>now</span>
+          </p>
+          <Transition name="swap" mode="out-in">
+            <p :key="shipStage" class="truncate text-[0.74rem] font-semibold text-ink">{{ shipment[shipStage] }}</p>
+          </Transition>
+        </div>
+      </div>
     </div>
 
     <figcaption class="mt-4 text-right font-mono text-[0.66rem] uppercase tracking-[0.12em] text-mute">
-      Illustrative interface — tokenise · tap · approve
+      Illustrative interfaces — payments · public safety · education · logistics
     </figcaption>
   </figure>
 </template>
 
 <style scoped>
+.stage {
+  aspect-ratio: 1 / 1.08;
+}
+.front {
+  position: relative;
+  z-index: 10;
+  width: 50%;
+  margin-inline: auto;
+}
+.side {
+  position: absolute;
+  top: 9%;
+  width: 38%;
+  filter: saturate(0.9);
+  transition: transform 0.8s var(--ease-out-expo);
+}
+.side--left {
+  left: 0;
+  transform: rotate(-7deg);
+}
+.side--right {
+  right: 0;
+  transform: rotate(7deg);
+}
+.hero-device:hover .side--left {
+  transform: rotate(-9deg) translateX(-4%);
+}
+.hero-device:hover .side--right {
+  transform: rotate(9deg) translateX(4%);
+}
+.side :deep(.phone) {
+  border-radius: 2rem;
+}
+.side :deep(.phone__screen) {
+  border-radius: 1.6rem;
+}
+.call {
+  animation: call 2.4s ease-in-out infinite;
+}
+@keyframes call {
+  50% {
+    box-shadow: 0 0 0 4cqw rgb(255 90 31 / 0.18);
+  }
+}
+.bar {
+  transform-origin: left;
+  animation: grow 1.4s var(--ease-out-expo) both;
+}
+@keyframes grow {
+  from {
+    transform: scaleX(0);
+  }
+}
+.notice {
+  position: absolute;
+  z-index: 20;
+  top: 58%;
+  right: -3%;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: min(62%, 15rem);
+  padding: 0.6rem 0.75rem 0.6rem 0.6rem;
+  border-radius: 1.1rem;
+  animation: float 6s ease-in-out infinite;
+}
+@keyframes float {
+  50% {
+    transform: translateY(-6px);
+  }
+}
+.swap-enter-active,
+.swap-leave-active {
+  transition:
+    opacity 0.3s,
+    transform 0.3s var(--ease-out-expo);
+}
+.swap-enter-from {
+  opacity: 0;
+  transform: translateY(6px);
+}
+.swap-leave-to {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
 .field {
   position: absolute;
-  inset: 0 0 8% 20%;
+  inset: 0 0 8% 0;
   display: grid;
   place-items: center;
   pointer-events: none;
@@ -237,8 +348,8 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
   aspect-ratio: 1.586;
-  padding: 0.8rem;
-  border-radius: 0.8rem;
+  padding: 5cqw;
+  border-radius: 5cqw;
   background:
     radial-gradient(120% 140% at 100% 0%, rgb(255 90 31 / 0.55), transparent 55%),
     linear-gradient(135deg, #2a2f39, #14171d);
@@ -247,21 +358,21 @@ onBeforeUnmount(() => {
 }
 .card.is-token {
   background:
-    radial-gradient(120% 140% at 100% 0%, rgb(61 220 151 / 0.35), transparent 55%),
+    radial-gradient(120% 140% at 100% 0%, rgb(110 140 255 / 0.4), transparent 55%),
     linear-gradient(135deg, #1d2129, #0c0e12);
 }
 .chip-ic {
-  width: 1.4rem;
-  height: 1rem;
-  border-radius: 0.25rem;
+  width: 8.5cqw;
+  height: 6cqw;
+  border-radius: 1.5cqw;
   background: linear-gradient(135deg, #d8c79a, #9f8a55);
 }
 
 .status-orb {
   display: grid;
   place-items: center;
-  width: 3.6rem;
-  height: 3.6rem;
+  width: 21cqw;
+  height: 21cqw;
   border-radius: 50%;
   background: rgb(241 239 233 / 0.08);
   color: var(--color-paper);
@@ -283,8 +394,8 @@ onBeforeUnmount(() => {
 .check {
   display: grid;
   place-items: center;
-  width: 1rem;
-  height: 1rem;
+  width: 6cqw;
+  height: 6cqw;
   border-radius: 50%;
   border: 1px solid rgb(241 239 233 / 0.2);
   color: transparent;
@@ -297,20 +408,5 @@ onBeforeUnmount(() => {
   background: var(--color-token);
   border-color: var(--color-token);
   color: var(--color-ink);
-}
-.layer {
-  border: 1px solid transparent;
-  transition:
-    background-color 0.4s,
-    color 0.4s,
-    border-color 0.4s;
-}
-.layer.is-active {
-  background: var(--color-ink);
-  color: var(--color-paper);
-}
-.layer.is-active .font-mono {
-  color: var(--color-signal);
-  opacity: 1;
 }
 </style>

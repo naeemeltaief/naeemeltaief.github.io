@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue'
-import { ArrowLeft, ArrowRight, ArrowUpRight, Check, GraduationCap, Map, Ship, Users } from 'lucide-vue-next'
+import { ArrowLeft, ArrowRight, ArrowUpRight, Check, Map, Ship, Users } from 'lucide-vue-next'
 import ProjectVisual from '@/components/visuals/ProjectVisual.vue'
 import ButtonLink from '@/components/ui/ButtonLink.vue'
 import NotFoundView from './NotFoundView.vue'
@@ -17,7 +17,7 @@ const next = computed(() => {
 })
 // Development-only checklist of missing content; tree-shaken out of production builds.
 const PendingNote = import.meta.env.DEV ? defineAsyncComponent(() => import('@/components/ui/PendingNote.vue')) : null
-const icons: Record<IconName, typeof Map> = { graduation: GraduationCap, users: Users, map: Map, ship: Ship }
+const icons: Record<IconName, typeof Map> = { users: Users, map: Map, ship: Ship }
 
 useHead(() =>
   project.value
