@@ -1,0 +1,42 @@
+<!doctype html>
+<!-- Source for public/og-image.png (1200×630). Regenerate with: node scripts/generate-assets.mjs -->
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+  @font-face { font-family: Display; src: url(../node_modules/@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-opsz-normal.woff2); font-weight: 200 800; }
+  @font-face { font-family: Sans; src: url(../node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2); font-weight: 100 900; }
+  @font-face { font-family: Mono; src: url(../node_modules/@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2); font-weight: 100 800; }
+  * { margin: 0; box-sizing: border-box; }
+  body { width: 1200px; height: 630px; background: #f1efe9; color: #0c0e12; font-family: Sans; position: relative; overflow: hidden; }
+  .grid { position: absolute; inset: 0; background-image: linear-gradient(rgb(12 14 18 / .08) 1px, transparent 1px), linear-gradient(90deg, rgb(12 14 18 / .08) 1px, transparent 1px); background-size: 72px 72px;
+    -webkit-mask-image: radial-gradient(80% 90% at 80% 20%, #000, transparent); }
+  .wrap { position: absolute; inset: 64px 72px; display: flex; flex-direction: column; }
+  .pill { align-self: flex-start; display: flex; align-items: center; gap: 10px; background: #0c0e12; color: #f1efe9; font: 500 15px Mono; letter-spacing: .14em; text-transform: uppercase; padding: 10px 16px; border-radius: 99px; }
+  .pill i { width: 8px; height: 8px; border-radius: 50%; background: #ff5a1f; }
+  h1 { font: 600 92px/0.95 Display; font-variation-settings: 'opsz' 96; letter-spacing: -0.03em; margin-top: 36px; max-width: 760px; }
+  h1 span { color: #b43a0c; }
+  .foot { margin-top: auto; display: flex; justify-content: space-between; align-items: flex-end; }
+  .name { font: 600 30px Display; letter-spacing: -0.01em; }
+  .meta { font: 500 15px Mono; letter-spacing: .12em; text-transform: uppercase; color: #565b65; margin-top: 8px; }
+  .mark { width: 72px; height: 72px; }
+  .rings { position: absolute; right: -120px; top: 40px; width: 560px; height: 560px; }
+  .rings b { position: absolute; inset: 0; margin: auto; border: 1.5px solid rgb(255 90 31 / .45); border-radius: 50%; }
+</style>
+</head>
+<body>
+  <div class="grid"></div>
+  <div class="rings"><b style="width:30%;height:30%"></b><b style="width:55%;height:55%"></b><b style="width:80%;height:80%;opacity:.6"></b><b style="width:100%;height:100%;opacity:.3"></b></div>
+  <div class="wrap">
+    <div class="pill"><i></i>Technical Mobile Team Lead</div>
+    <h1>Mobile products people trust with their <span>money.</span></h1>
+    <div class="foot">
+      <div>
+        <div class="name">Naeem Eltaief</div>
+        <div class="meta">Flutter · Native iOS &amp; Android · Fintech · Tripoli, Libya</div>
+      </div>
+      <svg class="mark" viewBox="0 0 64 64"><rect width="64" height="64" rx="16" fill="#0c0e12"/><path d="M17 46V18h6.2l13.6 18.4V18H43v28h-6.1L23.2 27.6V46z" fill="#f1efe9"/><circle cx="49.5" cy="42.5" r="4.5" fill="#ff5a1f"/></svg>
+    </div>
+  </div>
+</body>
+</html>
