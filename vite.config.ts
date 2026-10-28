@@ -70,7 +70,7 @@ function staticRoutes(siteUrl: string): Plugin {
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
-  const siteUrl = env.VITE_SITE_URL || 'https://naeemeltaief.me'
+  const siteUrl = env.VITE_SITE_URL || 'https://naeemeltaief.tech'
 
   return {
     plugins: [vue(), tailwindcss(), staticRoutes(siteUrl)],

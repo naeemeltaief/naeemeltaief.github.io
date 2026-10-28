@@ -21,7 +21,7 @@ Copy `.env.example` to `.env.local` and adjust as needed.
 
 | Variable             | Purpose                                                                                                                                                                                       |
 | -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `VITE_SITE_URL`      | Public address of the site, with no trailing slash. It's used for canonical URLs, Open Graph tags, `sitemap.xml` and `robots.txt`. Default: `https://naeemeltaief.me`.                          |
+| `VITE_SITE_URL`      | Public address of the site, with no trailing slash. It's used for canonical URLs, Open Graph tags, `sitemap.xml` and `robots.txt`. Default: `https://naeemeltaief.tech`.                          |
 | `VITE_FORM_ENDPOINT` | Optional. A form service that accepts JSON posts, for example a Formspree URL like `https://formspree.io/f/xxxx`. **If this is empty**, the contact form opens the visitor's email app with the message already filled in. |
 
 ### Contact form
@@ -52,9 +52,7 @@ Every route exists as a real file, so **no rewrite rules are needed** on any hos
 - **Netlify or Vercel:** set the build command to `npm run build` and the output folder to `dist`.
 - **Any static host:** upload the contents of `dist/`.
 
-> ⚠️ **Domain:** `naeemeltaief.github.io` currently redirects to `naeemeltaief.me`, but that domain doesn't resolve (no DNS records). Do one of the following:
-> - Point the domain's DNS at GitHub Pages and add a `public/CNAME` file containing `naeemeltaief.me`.
-> - Or set `VITE_SITE_URL` to wherever the site will actually live.
+> **Domain:** the site is served at `naeemeltaief.tech` (set in `public/CNAME`). The domain's DNS must point at GitHub Pages: four `A` records on `@` (185.199.108.153, 185.199.109.153, 185.199.110.153, 185.199.111.153) and a `CNAME` record on `www` pointing to `naeemeltaief.github.io`.
 
 ## Project structure
 
